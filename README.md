@@ -10,7 +10,7 @@ $ docker build -t aimms:4.72.1.1 --build-arg AIMMS_VERSION_MAJOR=4.72 --build-ar
 ```
 
 # Running the docker image
-The Dockerfile and the docker-entry.sh file in this repo are configured two expose to volumes to the outside world, allowing for persistent storage. The two volumes are
+The Dockerfile and the docker-entry.sh file in this repo are configured to expose two volumes to the outside world, allowing for persistent storage. The two volumes are
  - /data
  - /model
 
