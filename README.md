@@ -6,8 +6,10 @@ This is the Git repo of the Docker jobrunner image for the [AIMMS](https://www.a
 The Dockerfile in this Git repo will automatically attempt to download the AIMMS linux installer from the AIMMS [website](https://www.aimms.com/english/developers/downloads/download-aimms/). You need to specify the AIMMS version to download and build using the following docker build arguments:
 
 ```console
-$ docker build -t aimms:4.72.1.1 --build-arg AIMMS_VERSION_MAJOR=4.72 --build-arg AIMMS_VERSION_MINOR=1.1 .
+$ docker build -t aimms:24.3.2.2 --build-arg AIMMS_VERSION_MAJOR=24.3 --build-arg AIMMS_VERSION_MINOR=2.2 .
 ```
+
+For AIMMS versions prior to AIMMS 24, please use the same command but then running it in the ```prior-aimms-versions``` subfolder.
 
 # Running the docker image
 The Dockerfile and the docker-entry.sh file in this repo are configured to expose two volumes to the outside world, allowing for persistent storage. The two volumes are
@@ -17,7 +19,7 @@ The Dockerfile and the docker-entry.sh file in this repo are configured to expos
 In the /data volume the license configuration files should be available, see the section [Setting up the licenses](#setting-up-the-licenses) below. The /model volume is where the AIMMS application should be placed. For example:
 
 ```console
-$ docker run --rm -it -v/home/me/apps/TransportModel:/model -v/home/me/aimmsconfig:/data aimms:4.72.1.1 jobrunner Transport.aimms
+$ docker run --rm -it -v/home/me/apps/TransportModel:/model -v/home/me/aimmsconfig:/data aimms:24.3.2.2 jobrunner Transport.aimms
 ```
 
 to run the [TransportModel example](https://github.com/aimms/examples/tree/master/Application%20Examples/Transport%20Model).
@@ -97,7 +99,73 @@ root@509c08b1faae:/# find /data
 /data/Nodelocks
 ```
 
-# Connecting with external databases
+
+# Connecting with external databases with AIMMS 24 and newer
+Below are listed some usefull Dockerfile snippets for further specializing your docker image to use AIMMS in combination with ODBC database drivers.
+
+
+## MySQL server ODBC
+```dockerfile
+## MySQL server ODBC
+ENV MYSQL_EIGHT_ODBC_CONNECTOR_VERSION=mysql-connector-odbc-8.0.29-1.el8.x86_64.rpm
+RUN cd /root \
+    && wget https://cdn.mysql.com/archives/mysql-connector-odbc-8.0/${MYSQL_EIGHT_ODBC_CONNECTOR_VERSION} \
+    && rpm -i ${MYSQL_EIGHT_ODBC_CONNECTOR_VERSION} \
+    && myodbc-installer -d -a -n "MySQL8.0" -t "DRIVER=/usr/lib64/libmyodbc8w.so;" \
+    && myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib64/libmyodbc8w.so;" \
+    && rm -f /root/${MYSQL_EIGHT_ODBC_CONNECTOR_VERSION}
+```
+
+## Microsoft SQL Server ODBC
+```dockerfile
+## Microsoft SQL Server ODBC
+RUN    curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/mssql-release.repo \
+    && dnf -y update \
+    && ACCEPT_EULA=Y dnf install -y msodbcsql18 \
+    && myodbc-installer -d -a -n "MS SQL Server" -t "DRIVER=/opt/microsoft/msodbcsql18/lib64/libmsodbcsql-18.1.so.2.1;" \
+    && rm -rf /var/cache \
+    && dnf clean all 
+```
+
+## SQLite3 ODBC
+```dockerfile
+## SQLite3 ODBC
+RUN    dnf -y update \ 
+    && dnf -y install  \
+              sqlite \
+              sqlite-devel \
+              unixODBC-devel \
+    && cd /root \
+    && wget http://www.ch-werner.de/sqliteodbc/sqliteodbc-0.9998.tar.gz \
+    && tar xvfz sqliteodbc-0.9998.tar.gz \
+    && cd sqliteodbc-0.9998 \
+    && ./configure \
+    && make install \
+    && myodbc-installer -d -a -n "SQLite" -t "DRIVER=/usr/local/lib/libsqlite3odbc.so;" \
+    && myodbc-installer -d -a -n "SQLite3" -t "DRIVER=/usr/local/lib/libsqlite3odbc.so;" \
+    && cd .. \
+    && rm -rf sqliteodbc-0.9998 \
+    && rm -f sqliteodbc-0.9998.tar.gz \
+    && dnf clean all 
+```
+
+## Oracle ODBC driver
+```dockerfile
+## Oracle ODBC driver
+COPY ol8-temp.repo /etc/yum.repos.d/ol8-temp.repo
+RUN wget https://yum.oracle.com/RPM-GPG-KEY-oracle-ol8 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle \
+ && gpg --import --import-options show-only /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle \
+ && dnf -y install oraclelinux-release-el8 \
+ && mv /etc/yum.repos.d/ol8-temp.repo /etc/yum.repos.d/ol8-temp.repo.disabled \
+ && dnf -y update \
+ && dnf -y install oracle-instantclient-release-el8 \
+ && dnf -y install oracle-instantclient-odbc \
+ && /usr/lib/oracle/21/client64/bin/odbc_update_ini.sh / /usr/lib/oracle/21/client64/lib \
+ && dnf clean all \
+ && rm -rf /var/cache
+```
+
+# Connecting with external databases with For AIMMS versions prior to AIMMS 24:
 Below are listed some usefull Dockerfile snippets for further specializing your docker image to use AIMMS in combination with ODBC database drivers.
 
 ## MySQL
