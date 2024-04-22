@@ -9,7 +9,7 @@ The Dockerfile in this Git repo will automatically attempt to download the AIMMS
 $ docker build -t aimms:24.3.2.2 --build-arg AIMMS_VERSION_MAJOR=24.3 --build-arg AIMMS_VERSION_MINOR=2.2 .
 ```
 
-For AIMMS versions prior to AIMMS 24, please use the same command but then from the ```prior-aimms-versions``` subfolder
+For AIMMS versions prior to AIMMS 24, please use the same command but then running it in the ```prior-aimms-versions``` subfolder.
 
 # Running the docker image
 The Dockerfile and the docker-entry.sh file in this repo are configured to expose two volumes to the outside world, allowing for persistent storage. The two volumes are
@@ -19,7 +19,7 @@ The Dockerfile and the docker-entry.sh file in this repo are configured to expos
 In the /data volume the license configuration files should be available, see the section [Setting up the licenses](#setting-up-the-licenses) below. The /model volume is where the AIMMS application should be placed. For example:
 
 ```console
-$ docker run --rm -it -v/home/me/apps/TransportModel:/model -v/home/me/aimmsconfig:/data aimms:4.72.1.1 jobrunner Transport.aimms
+$ docker run --rm -it -v/home/me/apps/TransportModel:/model -v/home/me/aimmsconfig:/data aimms:24.3.2.2 jobrunner Transport.aimms
 ```
 
 to run the [TransportModel example](https://github.com/aimms/examples/tree/master/Application%20Examples/Transport%20Model).
