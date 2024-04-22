@@ -165,7 +165,7 @@ RUN wget https://yum.oracle.com/RPM-GPG-KEY-oracle-ol8 -O /etc/pki/rpm-gpg/RPM-G
  && rm -rf /var/cache
 ```
 
-# Connecting with external databases with For AIMMS versions prior to AIMMS 24:
+# Connecting with external databases for AIMMS versions prior to AIMMS 24:
 Below are listed some usefull Dockerfile snippets for further specializing your docker image to use AIMMS in combination with ODBC database drivers.
 
 ## MySQL
