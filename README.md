@@ -149,9 +149,9 @@ RUN    dnf -y update \
     && dnf clean all 
 ```
 
-## install Oracle ODBC driver
+## Oracle ODBC driver
 ```dockerfile
-## install Oracle ODBC driver
+## Oracle ODBC driver
 COPY ol8-temp.repo /etc/yum.repos.d/ol8-temp.repo
 RUN wget https://yum.oracle.com/RPM-GPG-KEY-oracle-ol8 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle \
  && gpg --import --import-options show-only /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle \
