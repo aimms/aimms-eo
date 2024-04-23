@@ -3,7 +3,7 @@
 This is the Git repo of the Docker jobrunner image for the [AIMMS](https://www.aimms.com) Embedded Optimization service.
 
 # Building the docker image
-The Dockerfile in this Git repo will automatically attempt to download the AIMMS linux installer from the AIMMS [website](https://www.aimms.com/english/developers/downloads/download-aimms/). You need to specify the AIMMS version to download and build using the following docker build arguments:
+The Dockerfile in this Git repo will automatically attempt to download the AIMMS linux installer from the AIMMS [website](https://www.aimms.com/downloads#aimms-custom-download). You need to specify the AIMMS version to download and build using the following docker build arguments:
 
 ```console
 $ docker build -t aimms:24.3.2.2 --build-arg AIMMS_VERSION_MAJOR=24.3 --build-arg AIMMS_VERSION_MINOR=2.2 .
