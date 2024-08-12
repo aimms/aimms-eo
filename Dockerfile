@@ -43,6 +43,8 @@ CMD ["jobrunner"]
 
 COPY jobrunner.c /tmp/jobrunner.c
 
+ENV LD_LIBRARY_PATH="/usr/local/Aimms/Bin"
+
 RUN gcc -I /usr/local/Aimms/Api /tmp/jobrunner.c -L /usr/local/Aimms/Bin -laimms3 -Wl,--hash-style=both -Wl,-R,'$ORIGIN/../Bin' -Wl,-R,'$ORIGIN/../Solvers' -o /usr/local/Aimms/Bin/jobrunner
 
 
