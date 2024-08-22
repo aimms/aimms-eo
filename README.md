@@ -6,7 +6,7 @@ This is the Git repo of the Docker jobrunner image for the [AIMMS](https://www.a
 The Dockerfile in this Git repo will automatically attempt to download the AIMMS linux installer from the AIMMS [website](https://www.aimms.com/downloads#aimms-custom-download). You need to specify the AIMMS version to download and build using the following docker build arguments:
 
 ```console
-$ docker build -t aimms:24.3.2.2 --build-arg AIMMS_VERSION_MAJOR=24.3 --build-arg AIMMS_VERSION_MINOR=2.2 .
+docker build -t aimms:24.3.2.2 --build-arg AIMMS_VERSION_MAJOR=24.3 --build-arg AIMMS_VERSION_MINOR=2.2 .
 ```
 
 For AIMMS versions prior to AIMMS 24, please use the same command but then running it in the ```prior-aimms-versions``` subfolder.
@@ -19,12 +19,15 @@ The Dockerfile and the docker-entry.sh file in this repo are configured to expos
 In the /data volume the license configuration files should be available, see the section [Setting up the licenses](#setting-up-the-licenses) below. The /model volume is where the AIMMS application should be placed. For example:
 
 ```console
-$ docker run --rm -it -v/home/me/apps/TransportModel:/model -v/home/me/aimmsconfig:/data aimms:24.3.2.2 jobrunner Transport.aimms
+docker run --rm -it -v/home/me/apps/TransportModel:/model -v/home/me/aimmsconfig:/data aimms:24.3.2.2 AimmsCmd Transport.aimms
 ```
 
 to run the [TransportModel example](https://github.com/aimms/examples/tree/master/Application%20Examples/Transport%20Model).
 
-# Jobrunner arguments
+# Alternative way of running aimms via an own executable
+In this repo we also provide an alternative way to running an AIMMS application by using the AIMMS C API. The source is available and buildable by uncommenting the last 3 lines in the Dockerfile.
+
+## Jobrunner arguments
 Starting the jobrunner without arguments will results into the following usage output:
 
 ```console
