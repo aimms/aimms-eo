@@ -35,7 +35,7 @@ int CheckAPIError(int retval, const char *intro)
 		char errorMessage[2048];
 		AimmsAPILastErrorA(&errorCode, errorMessage);
         fprintf(stderr, "error: %s: %s\n", intro, errorMessage);
-		exit(-1);
+		return 1;
 	}
 	return 0;
 }
