@@ -18,7 +18,7 @@ if [ "$1" = 'AimmsCmd' ]; then
     cd /model
     shift
     exec /usr/local/Aimms/Bin/AimmsCmd "$@"
-else if [ "$1" = 'jobrunner' ]; then
+elif [ "$1" = 'jobrunner' ]; then
     cd /model
     shift
     exec /usr/local/Aimms/Bin/jobrunner "$@"
