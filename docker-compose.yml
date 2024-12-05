@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  aimms:
+    image: aimms:24.6.1.6
+    build:
+      context: .
+      args:
+        AIMMS_VERSION: 24.6.1.6
+    volumes:
+      # mounting to /model such that the model is available in the container and the logs are written to the host
+      - E:/gitlab/aimms-eo/testing/AimmsUnitTestTest:/model
+      # this is the path to the AIMMS folder containing the license file so for example: C:/ProgramData/AIMMS required to run aimms
+      - C:/ProgramData/AIMMS:/data
+
+    # run AimmsCmd with the following arguments
+    entrypoint: ["/usr/local/Aimms/Bin/AimmsCmd"]
+
+    # don't forget to change the path to the model file
+    command: ["--aimms-root-path", "/data", "--run-only", "MainExecution", "/model/AimmsUnitTestTest.aimms"]
+    
