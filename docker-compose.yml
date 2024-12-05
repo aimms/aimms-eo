@@ -7,7 +7,7 @@ services:
         AIMMS_VERSION: ${AIMMS_VERSION}
     volumes:
       # mounting to /model such that the model is available in the container and the logs are written to the host
-      - E:/gitlab/aimms-eo/testing/AimmsUnitTestTest:/model
+      - ./testing/AimmsUnitTestTest:/model
       # this is the path to the AIMMS folder containing the license file so for example: C:/ProgramData/AIMMS required to run aimms
       - C:/ProgramData/AIMMS:/data
 
