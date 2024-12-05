@@ -2,63 +2,17 @@
 
 This is the Git repo of the Docker jobrunner image for the [AIMMS](https://www.aimms.com) Embedded Optimization service.
 
-# Building the docker image
-The Dockerfile in this Git repo will automatically attempt to download the AIMMS linux installer from the AIMMS [website](https://www.aimms.com/downloads#aimms-custom-download). You need to specify the AIMMS version to download and build using the following docker build arguments:
+## DOCKER COMPOSE
 
-```console
-$ docker build -t aimms:24.3.2.2 --build-arg AIMMS_VERSION_MAJOR=24.3 --build-arg AIMMS_VERSION_MINOR=2.2 .
+To run aimms unit tests easily with docker compose, you can use the following command:
+
+```bash
+docker compose run --rm --build aimms
 ```
 
-For AIMMS versions prior to AIMMS 24, please use the same command but then running it in the ```prior-aimms-versions``` subfolder.
+This will take the docker-compose.yml file and build and run AIMMS. If you want Different Aimms Versions you can change the .env file which has the AIMMS_VERSION in it.
 
-# Running the docker image
-The Dockerfile and the docker-entry.sh file in this repo are configured to expose two volumes to the outside world, allowing for persistent storage. The two volumes are
- - /data
- - /model
-
-In the /data volume the license configuration files should be available, see the section [Setting up the licenses](#setting-up-the-licenses) below. The /model volume is where the AIMMS application should be placed. For example:
-
-```console
-$ docker run --rm -it -v/home/me/apps/TransportModel:/model -v/home/me/aimmsconfig:/data aimms:24.3.2.2 jobrunner Transport.aimms
-```
-
-to run the [TransportModel example](https://github.com/aimms/examples/tree/master/Application%20Examples/Transport%20Model).
-
-# Jobrunner arguments
-Starting the jobrunner without arguments will results into the following usage output:
-
-```console
-usage: AimmsJobRunner [options] AimmsModel.aimms(pack) [arg1 ... argn]
-
-with options:
-   -l --licfolder   folder where the license-configuration folders can be found, defaults to /usr/local/Aimms
-   -c --logconfig   file that specifies the log4cxx logging configuration, defaults to writing to stdout
-   -m --maxthreads  maximum number of threads to use, defaults to the number of detected CPUs
-   -p --procedure   name of the AIMMS procedure to run, defaults to MainExecution
-   --keeplog        flag that cause some intermediate logfiles to not be deleted, can be useful for debugging
-   all arguments after the modelfile will be passed on to AIMMS
-```
-
-AIMMS versions before 4.73 do not support the --logconfig (-c) option and they can not log to the console; it is therefore highly recommend to use 4.73 or later. The default of the --maxthreads option is the number of detected CPUs; for docker sessions this is typically the number of CPUs of the host machine. If you limit the available number of cpus to a docker session (e.g. docker run --cpu=4) you should also pass this on onto the AIMMS jobrunner, otherwise the AIMMS jobrunner will still try to execute with the ammount of threads equal to the number of detected CPUs and cause performance overhead.
-
-## Arguments passed to AIMMS
-The arguments specified after the model name are directly passed to AIMMS and are accessible from within the AIMMS model by using the [SessionArgument](https://documentation.aimms.com/functionreference/system-interaction/invoking-actions/sessionargument.html) procedure. These arguments can be used to indicate input files or switches to let the job behave in a model specific way.
-
-For example:
-```
-block
-    if (not SessionArgument(1, JobControlFile) or not SessionArgument(2, InputDataFile)) then
-        return 1;
-    endif;
-
-    ! do something
-    display JobControlFile, InputDataFile;
-
-    return 0;
-onerror err do
-    errh::MarkAsHandled(err);
-endblock;
-```
+This is a simple way to run aimms unit tests within a docker container in a pipeline.
 
 # Deployment options
 

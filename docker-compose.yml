@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   aimms:
-    image: aimms:24.6.1.6
+    image: aimms:${AIMMS_VERSION}
     build:
       context: .
       args:
-        AIMMS_VERSION: 24.6.1.6
+        AIMMS_VERSION: ${AIMMS_VERSION}
     volumes:
       # mounting to /model such that the model is available in the container and the logs are written to the host
       - E:/gitlab/aimms-eo/testing/AimmsUnitTestTest:/model
@@ -17,5 +15,5 @@ services:
     entrypoint: ["/usr/local/Aimms/Bin/AimmsCmd"]
 
     # don't forget to change the path to the model file
-    command: ["--aimms-root-path", "/data", "--run-only", "MainExecution", "/model/AimmsUnitTestTest.aimms"]
+    command: ["--aimms-root-path", "/data", "--run-only", "${AIMMS_PROCEDURE}", "/model/${AIMMS_PROJECT_NAME}"]
     
