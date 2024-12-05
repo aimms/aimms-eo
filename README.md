@@ -12,7 +12,7 @@ docker compose run --rm --build aimms
 
 This will take the docker-compose.yml file and build and run AIMMS. If you want Different Aimms Versions you can change the .env file which has the AIMMS_VERSION in it.
 
-This is a simple way to run aimms unit tests within a docker container in a pipeline.
+This is a simple way to run aimms unit tests within a docker container in a pipeline. You can also adjust the docker-compose.yml file to change the path of the aimms model you want to run.
 
 # Deployment options
 
