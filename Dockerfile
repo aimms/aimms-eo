@@ -9,7 +9,8 @@ RUN dnf upgrade -y almalinux-release
 
 RUN dnf -y update \ 
     && dnf -y install  \
-            gcc-toolset-11 \
+            gcc-toolset-11-runtime \
+            gcc-gfortran \
             unixODBC \ 
             ca-certificates \
             gnupg \
