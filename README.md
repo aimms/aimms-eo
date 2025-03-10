@@ -102,6 +102,27 @@ root@509c08b1faae:/# find /data
 /data/Nodelocks
 ```
 
+## Alternative: embedding the license in the image
+Instead of placing the keyless license in a volume mount that can be shared with multiple docker containers it is also possible to embed the above files inside the docker image. This does imply tha when a new license file needs to be applied, all relevant docker images need to be rebuild. To do so, you can replace the line ```VOLUME /data``` with:
+
+```Dockerfile
+RUN mkdir -p /data/Config && mkdir -p /data/Licenses
+# copy the license files
+# the licenses.cfg should contain `1 local 015120001005.lic` (without quotes)
+COPY licenses.cfg /data/Config
+COPY 015120001005.lic /data/Licenses
+COPY 010073015120001005001036.cpx /data/Licenses
+```
+
+## Alternative: specifying a license server
+Instead of using a keyless license you can also have the image use a specific AIMMS license server. This does mean that the license server should have enough free licenses available at start up, otherwise starting the image will fail. You are responsible for guaranteeing these conditions. To do so you can replace the line ```VOLUME /data``` with:
+```Dockerfile
+RUN mkdir -p /data/Config && mkdir -p /data/Licenses
+# copy the license files
+# the licenses.cfg should contain `1 network license-server.acme.com:3400` (without quotes, and adjusted for your license-server url and profiles)
+COPY licenses.cfg /data/Config
+```
+
 
 # Connecting with external databases with AIMMS 24 and newer
 Below are listed some usefull Dockerfile snippets for further specializing your docker image to use AIMMS in combination with ODBC database drivers.
