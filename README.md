@@ -103,7 +103,7 @@ root@509c08b1faae:/# find /data
 ```
 
 ## Alternative: embedding the license in the image
-Instead of placing the keyless license in a volume mount that can be shared with multiple docker containers it is also possible to embed the above files inside the docker image. This does imply tha when a new license file needs to be applied, all relevant docker images need to be rebuild. To do so, you can replace the line ```VOLUME /data``` with:
+Instead of placing the keyless license in a volume mount that can be shared with multiple docker containers, it is also possible to embed the above files inside the docker image. This does imply that when a new license file needs to be applied, all relevant docker images need to be rebuild. To embed the license in the image, you can replace the line ```VOLUME /data``` in the Dockerfile with:
 
 ```Dockerfile
 RUN mkdir -p /data/Config && mkdir -p /data/Licenses
@@ -115,7 +115,8 @@ COPY 010073015120001005001036.cpx /data/Licenses
 ```
 
 ## Alternative: specifying a license server
-Instead of using a keyless license you can also have the image use a specific AIMMS license server. This does mean that the license server should have enough free licenses available at start up, otherwise starting the image will fail. You are responsible for guaranteeing these conditions. To do so you can replace the line ```VOLUME /data``` with:
+Instead of using a keyless license you can also have the image obtain a license from a specific AIMMS license server. This does mean that the license server should have enough free licenses available at start up, otherwise starting the container will fail. You are responsible for guaranteeing these conditions. To do so you can replace the line ```VOLUME /data``` with:
+
 ```Dockerfile
 RUN mkdir -p /data/Config && mkdir -p /data/Licenses
 # copy the license files
