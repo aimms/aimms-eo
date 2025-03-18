@@ -26,11 +26,11 @@ RUN dnf -y update \
 RUN    echo "source scl_source enable gcc-toolset-11" > /etc/profile.d/enable_gcc_toolset_11.sh \
     && chmod a+rx /etc/profile.d/enable_gcc_toolset_11.sh
 
-RUN wget -q https://download.aimms.com/aimms/download/data/${AIMMS_VERSION_MAJOR}/${AIMMS_VERSION_MINOR}/Aimms-${AIMMS_VERSION_MAJOR}.${AIMMS_VERSION_MINOR}-installer.run && \
-    chmod a+rx Aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run && \
-    ./Aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run --target /usr/local/Aimms --noexec && \
+RUN wget -q https://download.aimms.com/aimms/download/data/${AIMMS_VERSION_MAJOR}/${AIMMS_VERSION_MINOR}/aimms-${AIMMS_VERSION_MAJOR}.${AIMMS_VERSION_MINOR}-installer.run && \
+    chmod a+rx aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run && \
+    ./aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run --target /usr/local/Aimms --noexec && \
 	rm -rf /usr/local/Aimms/WebUIDev && \
-    rm -f ./Aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run
+    rm -f ./aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run
 
 VOLUME /data
 VOLUME /model
@@ -44,9 +44,9 @@ CMD ["AimmsCmd"]
 
 # altenratively you can build your own executable that interacts with AIMMS
 # to control the execution of the model
-# COPY jobrunner.c /tmp/jobrunner.c
-# RUN gcc -I /usr/local/Aimms/Api /tmp/jobrunner.c -L /usr/local/Aimms/Bin -laimms3 -Wl,--hash-style=both -Wl,-R,'$ORIGIN/../Bin' -Wl,-R,'$ORIGIN/../Solvers' -o /usr/local/Aimms/Bin/jobrunner
-# CMD ["/usr/local/Aimms/Bin/jobrunner"]
+#COPY jobrunner.c /tmp/jobrunner.c
+#RUN gcc -I /usr/local/Aimms/Api /tmp/jobrunner.c -L /usr/local/Aimms/Bin -laimms3 -Wl,--hash-style=both -Wl,-R,'$ORIGIN/../Bin' -Wl,-R,'$ORIGIN/../Solvers' -o /usr/local/Aimms/Bin/jobrunner
+#CMD ["/usr/local/Aimms/Bin/jobrunner"]
 
 
 
