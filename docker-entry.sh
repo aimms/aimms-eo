@@ -14,10 +14,15 @@ ln -s /data/Licenses /usr/local/Aimms/Licenses
 ln -s /data/Logging /usr/local/Aimms/Logging
 ln -s /data/Nodelocks /usr/local/Aimms/Nodelocks
 
-if [ "$1" = 'jobrunner' ]; then
+if [ "$1" = 'AimmsCmd' ]; then
+    cd /model
+    shift
+    exec /usr/local/Aimms/Bin/AimmsCmd "$@"
+elif [ "$1" = 'jobrunner' ]; then
     cd /model
     shift
     exec /usr/local/Aimms/Bin/jobrunner "$@"
 else
+
     exec "$@"
 fi
