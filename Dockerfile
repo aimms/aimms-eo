@@ -10,7 +10,8 @@ RUN dnf upgrade -y almalinux-release
 
 RUN dnf -y update \ 
     && dnf -y install  \
-            gcc-toolset-11 \
+            gcc-toolset-11-runtime \
+            gcc-gfortran \
             unixODBC \ 
             ca-certificates \
             gnupg \
@@ -23,8 +24,6 @@ RUN dnf -y update \
     && rm -f /etc/odbcinst.ini \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 \
     && dnf clean all 
-RUN    echo "source scl_source enable gcc-toolset-11" > /etc/profile.d/enable_gcc_toolset_11.sh \
-    && chmod a+rx /etc/profile.d/enable_gcc_toolset_11.sh
 
 RUN wget -q https://download.aimms.com/aimms/download/data/${AIMMS_VERSION_MAJOR}/${AIMMS_VERSION_MINOR}/aimms-${AIMMS_VERSION_MAJOR}.${AIMMS_VERSION_MINOR}-installer.run && \
     chmod a+rx aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run && \
@@ -42,8 +41,14 @@ ENTRYPOINT ["/docker-entry.sh"]
 ENV LD_LIBRARY_PATH="/usr/local/Aimms/Bin"
 CMD ["AimmsCmd"]
 
-# altenratively you can build your own executable that interacts with AIMMS
+# alternatively you can build your own executable that interacts with AIMMS
 # to control the execution of the model
+#RUN dnf -y update \ 
+#    && dnf -y install  \
+#        gcc-toolset-11 \
+#    && dnf clean all         
+#RUN    echo "source scl_source enable gcc-toolset-11" > /etc/profile.d/enable_gcc_toolset_11.sh \
+#    && chmod a+rx /etc/profile.d/enable_gcc_toolset_11.sh
 #COPY jobrunner.c /tmp/jobrunner.c
 #RUN gcc -I /usr/local/Aimms/Api /tmp/jobrunner.c -L /usr/local/Aimms/Bin -laimms3 -Wl,--hash-style=both -Wl,-R,'$ORIGIN/../Bin' -Wl,-R,'$ORIGIN/../Solvers' -o /usr/local/Aimms/Bin/jobrunner
 #CMD ["/usr/local/Aimms/Bin/jobrunner"]
