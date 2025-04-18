@@ -25,11 +25,11 @@ RUN dnf -y update \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 \
     && dnf clean all 
 
-RUN wget -q https://download.aimms.com/aimms/download/data/${AIMMS_VERSION_MAJOR}/${AIMMS_VERSION_MINOR}/aimms-${AIMMS_VERSION_MAJOR}.${AIMMS_VERSION_MINOR}-installer.run && \
-    chmod a+rx aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run && \
-    ./aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run --target /usr/local/Aimms --noexec && \
+RUN wget -q https://download.aimms.com/aimms/download/data/${AIMMS_VERSION_MAJOR}/${AIMMS_VERSION_MINOR}/Aimms-${AIMMS_VERSION_MAJOR}.${AIMMS_VERSION_MINOR}-installer.run && \
+    chmod a+rx Aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run && \
+    ./Aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run --target /usr/local/Aimms --noexec && \
 	rm -rf /usr/local/Aimms/WebUIDev && \
-    rm -f ./aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run
+    rm -f ./Aimms-$AIMMS_VERSION_MAJOR.$AIMMS_VERSION_MINOR-installer.run
 
 VOLUME /data
 VOLUME /model
